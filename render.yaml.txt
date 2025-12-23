@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: job-dashboard
+    env: python
+    startCommand: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
+    buildCommand: |
+      pip install -r requirements.txt
+      playwright install chromium
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: worker
+    name: job-agent-worker
+    env: python
+    startCommand: python scheduler.py
+    buildCommand: |
+      pip install -r requirements.txt
+      playwright install chromium
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
